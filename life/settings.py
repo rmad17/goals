@@ -16,14 +16,14 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+try:
+    from .local_settings import SECRET_KEY, DATABASES, DEBUG  # noqa
+except ImportError as e:
+    print('Error:', e.msg)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'xw*4i0+1#)-@$0rs7c$jf=x$l-(g1li^07_)rb14dj@g))*r#4'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -37,6 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # apps
+    'goals',
+    # 3rd party apps
+    'django_extensions',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -118,8 +123,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-
-try:
-    from local_settings import SECRET_KEY, DATABASES, DEBUG  # noqa
-except ImportError as e:
-    print('Error:', e.msg)
