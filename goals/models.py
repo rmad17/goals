@@ -9,17 +9,14 @@ class Goal(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)
+    description = models.CharField(max_length=500)
     target_date = models.DateTimeField()
     end_date = models.DateTimeField()
 
     class Meta:
         ordering = ('created_at',)
         verbose_name = "Life Goal"
-
-    def as_dict(self):
-        return {'uuid': self.uuid, 'title': self.title, 'target_date':
-                self.target_date, 'end_date': self.end_date}
 
     def __str__(self):
         return self.title
