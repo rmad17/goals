@@ -20,6 +20,7 @@ class UserSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     password = serializers.CharField(write_only=True)
+    goals = serializers.StringRelatedField()
 
     def create(self, validated_data):
         user = User.objects.create(
@@ -34,7 +35,7 @@ class UserSerializer(serializers.Serializer):
 
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'groups')
+        fields = ('url', 'username', 'email', 'goals')
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):

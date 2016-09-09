@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^$', home, name='home'),
     url(r'^register/$', register, name='register'),
     url(r'^login/$', drf_views.obtain_auth_token, name='login'),
-    url(r'^list/$', goal_list, name='list'),
-    url(r'^goal/(?P<uuid>[^/]+)/$', goal_detail, name='goal'),
+    url(r'^(?P<username>[^/]+)/goals$', goal_list, name='goals'),
+    url(r'^(?P<username>[^/]+)/goal/(?P<uuid>[^/]+)/$', goal_detail,
+        name='goal'),
 ]

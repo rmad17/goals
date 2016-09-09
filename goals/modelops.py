@@ -9,6 +9,7 @@ All operations on models
 """
 
 from django.db import IntegrityError
+from django.contrib.auth.models import User
 
 from rest_framework.authtoken.models import Token
 
@@ -38,6 +39,13 @@ def create_token(user):
         return e.__cause__
 
 
+def get_user_by_username(user_name):
+    try:
+        return User.objects.get(username=user_name)
+    except IntegrityError as e:
+        return e.__cause__
+
+
 def get_all_goals():
     return Goal.objects.all()
 
@@ -45,5 +53,12 @@ def get_all_goals():
 def get_goal_by_uuid(uuid):
     try:
         return Goal.objects.get(uuid=uuid)
+    except Goal.DoesNotExist:
+        return None
+
+
+def get_goals_by_user(user):
+    try:
+        return Goal.objects.filter(user=user)
     except Goal.DoesNotExist:
         return None
