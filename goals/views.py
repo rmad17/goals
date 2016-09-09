@@ -1,11 +1,11 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User, Group
 
-from rest_framework import viewsets
 from rest_framework.parsers import JSONParser
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 
-from .serializers import UserSerializer, GroupSerializer, GoalSerializer
+from .serializers import UserSerializer, GoalSerializer
 from .modelops import get_all_goals, get_goal_by_uuid
 
 # Create your views here.
@@ -15,42 +15,32 @@ def home(request):
     return HttpResponse("This is test")
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
+@api_view(['POST'])
+def register(request):
+    data = JSONParser().parse(request)
+    serializer = UserSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return JsonResponse({'data': serializer.data}, status=201)
+    return JsonResponse({'error': serializer.errors}, status=400)
 
 
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-
-
-@csrf_exempt
+@api_view(['GET'])
 def goal_list(request):
     """
     List all goals.
     """
-    if not request.method == 'GET':
-        return JsonResponse({'msg': 'invalid request'}, status=403)
     goals = get_all_goals
     serializer = GoalSerializer(goals)
-    import pdb; pdb.set_trace()
     return JsonResponse({'data': serializer.data}, status=200)
 
 
-@csrf_exempt
+@permission_classes((IsAuthenticated, ))
+@api_view(['POST'])
 def create_goal(request):
     """
     Create a goal
     """
-    if not request.method == 'POST':
-        return JsonResponse({'message': 'invalid request'}, status=403)
     data = JSONParser().parse(request)
     serializer = GoalSerializer(data=data)
     if serializer.is_valid():
@@ -60,6 +50,7 @@ def create_goal(request):
 
 
 @csrf_exempt
+@api_view(['GET, POST, PUT, DELETE'])
 def goal_detail(request, uuid):
     """
     Retrieve, update or delete a goal.

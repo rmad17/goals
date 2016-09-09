@@ -21,10 +21,14 @@ Including another URLconf
 """
 from django.conf.urls import url
 
-from .views import home, goal_list, goal_detail
+from rest_framework.authtoken import views as drf_views
+
+from .views import home, goal_list, goal_detail, register
 
 urlpatterns = [
     url(r'^$', home, name='home'),
-    url(r'^goals/$', goal_list),
+    url(r'^register/$', register, name='register'),
+    url(r'^login/$', drf_views.obtain_auth_token, name='login'),
+    url(r'^list/$', goal_list, name='list'),
     url(r'^goal/(?P<uuid>[^/]+)/$', goal_detail, name='goal'),
 ]
