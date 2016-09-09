@@ -39,7 +39,8 @@ def goal_list(request):
     if not request.method == 'GET':
         return JsonResponse({'msg': 'invalid request'}, status=403)
     goals = get_all_goals
-    serializer = GoalSerializer(goals, many=True)
+    serializer = GoalSerializer(goals)
+    import pdb; pdb.set_trace()
     return JsonResponse({'data': serializer.data}, status=200)
 
 

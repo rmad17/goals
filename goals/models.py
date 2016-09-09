@@ -8,7 +8,7 @@ class Goal(models.Model):
                             editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name='goals')
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=500, blank=True, null=True)
     target_date = models.DateTimeField()
