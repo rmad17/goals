@@ -23,13 +23,14 @@ from django.conf.urls import url
 
 from rest_framework.authtoken import views as drf_views
 
-from .views import home, goal_list, goal_detail, register
+from .views import home, goal_list, goal_detail, register, create_goal
 
 urlpatterns = [
     url(r'^$', home, name='home'),
     url(r'^register/$', register, name='register'),
     url(r'^login/$', drf_views.obtain_auth_token, name='login'),
-    url(r'^(?P<username>[^/]+)/goals$', goal_list, name='goals'),
+    url(r'^(?P<username>[^/]+)/goal/add/$', create_goal, name='create_goal'),
+    url(r'^(?P<username>[^/]+)/goals/$', goal_list, name='goals'),
     url(r'^(?P<username>[^/]+)/goal/(?P<uuid>[^/]+)/$', goal_detail,
         name='goal'),
 ]

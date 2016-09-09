@@ -1,5 +1,4 @@
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.parsers import JSONParser
 from rest_framework.authentication import TokenAuthentication
@@ -28,13 +27,19 @@ def register(request):
 
 
 @api_view(['POST'])
-@authentication_classes((TokenAuthentication))
-@permission_classes((IsAuthenticated, ))
-def create_goal(request):
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def create_goal(request, username):
     """
     Create a goal
     """
+    print("create goal")
+    user = get_user_by_username(username)
+    if str(request.auth) != str(user.auth_token):
+        return JsonResponse({"message": "Don't peep into other's house"},
+                            status=200)
     data = JSONParser().parse(request)
+    data['user'] = user.id
     serializer = GoalSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
@@ -57,8 +62,7 @@ def goal_list(request, username):
     return JsonResponse({'data': serializer.data}, status=200)
 
 
-@csrf_exempt
-@api_view(['GET, POST, PUT, DELETE'])
+@api_view(['GET, PUT, DELETE'])
 def goal_detail(request, uuid):
     """
     Retrieve, update or delete a goal.

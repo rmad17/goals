@@ -36,9 +36,6 @@ class GoalSerializer(serializers.ModelSerializer):
         """
         Update and return an existing `Goal` instance, given the validated data
         """
-        instance.uuid = validated_data.get('uuid', instance.uuid)
-        instance.created_at = validated_data.get('created_at',
-                                                 instance.created_at)
         instance.user = validated_data.get('user', instance.user)
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description',
