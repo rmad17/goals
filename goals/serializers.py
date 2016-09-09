@@ -14,30 +14,6 @@ from rest_framework import serializers
 from .models import Goal
 
 
-class UserSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True)
-    email = serializers.EmailField(required=True)
-    first_name = serializers.CharField()
-    last_name = serializers.CharField()
-    password = serializers.CharField(write_only=True)
-    goals = serializers.StringRelatedField()
-
-    def create(self, validated_data):
-        user = User.objects.create(
-            username=validated_data.get('username'),
-            email=validated_data.get('email'),
-            first_name=validated_data.get('first_name'),
-            last_name=validated_data.get('last_name')
-        )
-        user.set_password(validated_data.get('password'))
-        user.save()
-        return user
-
-    class Meta:
-        model = User
-        fields = ('url', 'username', 'email', 'goals')
-
-
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
@@ -72,3 +48,27 @@ class GoalSerializer(serializers.ModelSerializer):
         instance.end_date = validated_data.get('end_date', instance.end_date)
         instance.save()
         return instance
+
+
+class UserSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+    goals = GoalSerializer(many=True)
+
+    def create(self, validated_data):
+        user = User.objects.create(
+            username=validated_data.get('username'),
+            email=validated_data.get('email'),
+            first_name=validated_data.get('first_name'),
+            last_name=validated_data.get('last_name')
+        )
+        user.set_password(validated_data.get('password'))
+        user.save()
+        return user
+
+    class Meta:
+        model = User
+        fields = ('url', 'username', 'email', 'goals',)
