@@ -20,10 +20,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from django.contrib import admin
 
-from .views import home
+from .views import home, goal_list, goal_detail
 
 urlpatterns = [
     url(r'^$', home, name='home'),
+    url(r'^goals/$', goal_list),
+    url(r'^goal/(?P<uuid>[^/]+)/$', goal_detail, name='goal'),
 ]

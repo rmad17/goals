@@ -10,9 +10,9 @@ class Goal(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User)
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=500)
+    description = models.CharField(max_length=500, blank=True, null=True)
     target_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    end_date = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         ordering = ('created_at',)

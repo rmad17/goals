@@ -24,14 +24,11 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'name')
 
 
-class GoalSerializer(serializers.Serializer):
-    uuid = serializers.UUIDField(read_only=True)
-    created_at = serializers.DateTimeField()
-    user = serializers.ModelField(model_field=Goal())
-    title = serializers.CharField(max_length=200)
-    description = serializers.CharField(max_length=500)
-    target_date = serializers.DateTimeField()
-    end_date = serializers.DateTimeField()
+class GoalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Goal
+        fields = ('uuid', 'created_at', 'user', 'title', 'description',
+                  'target_data', 'end_date')
 
     def create(self, validated_data):
         """
