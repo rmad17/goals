@@ -53,7 +53,7 @@ class UserSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     password = serializers.CharField(write_only=True)
-    goals = GoalSerializer(many=True)
+    goals = GoalSerializer(many=True, read_only=True)
 
     def create(self, validated_data):
         user = User.objects.create(
