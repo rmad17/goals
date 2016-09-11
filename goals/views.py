@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, permission_classes, \
         authentication_classes
 
 from .serializers import UserSerializer, GoalSerializer
-from .modelops import get_goal_by_uuid, get_user_by_username
+from .modelops import get_goal_by_uuid, get_user_by_username, get_token_by_user
 
 # Create your views here.
 
@@ -22,7 +22,11 @@ def register(request):
     serializer = UserSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
-        return JsonResponse({'data': serializer.data}, status=201)
+        user = get_user_by_username(data.get('username'))
+        if user:
+            token = get_token_by_user(user)
+        return JsonResponse({'data': serializer.data, 'token': token.key},
+                            status=201)
     return JsonResponse({'error': serializer.errors}, status=400)
 
 

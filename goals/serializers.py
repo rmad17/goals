@@ -12,6 +12,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
 from .models import Goal
+from .modelops import create_token
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
@@ -64,6 +65,7 @@ class UserSerializer(serializers.Serializer):
         )
         user.set_password(validated_data.get('password'))
         user.save()
+        create_token(user)
         return user
 
     class Meta:

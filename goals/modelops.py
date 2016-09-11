@@ -42,6 +42,13 @@ def create_token(user):
 def get_user_by_username(user_name):
     try:
         return User.objects.get(username=user_name)
+    except IntegrityError:
+        return None
+
+
+def get_token_by_user(user):
+    try:
+        return Token.objects.get(user=user)
     except IntegrityError as e:
         return e.__cause__
 
